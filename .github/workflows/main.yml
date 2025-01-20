@@ -3,7 +3,7 @@ name: Deploy React App
 on:
   push:
     branches:
-      - main # trigger on push to the main branch
+      - master # trigger on push to the main branch
 
 jobs:
   deploy:
@@ -13,18 +13,18 @@ jobs:
       # Step 1: Checkout the repository
       - name: Checkout Code
         uses: actions/checkout@v3
-        
+
       # Step 2: Copy Project to VPS
       - name: Copy Project to VPS
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.VPS_HOST }}
-          userName: ${{ secrets.VPS_USER }}
+          username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS_PRIVATE_KEY }}
           source: ./
           target: /home/${{ secrets.VPS_USER }}/${{ VPS_FOLDER }}
 
-       # Step 3: SSH into VPS and Deploy
+      # Step 3: SSH into VPS and Deploy
       - name: Deploy on Vps
         uses: appleboy/scp-action@v0.1.7
         with:
