@@ -16,7 +16,15 @@ jobs:
       # Step 1: Checkout repository
       - name: Checkout code
         uses: actions/checkout@v4
-
+      # Step 2: Sync updated code to EC2
+      - name: Upload code to EC2
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.EC2_IP }}
+          username: ${{ secrets.USER_NAME }}
+          key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
+          source: .
+          target: /var/deploy-react
       # Step 4: Build and deploy the app on EC2 using Docker Compose
       - name: Build and deploy on EC2
         uses: appleboy/ssh-action@master
@@ -28,7 +36,7 @@ jobs:
             cd /var/deploy-react
 
             # Stop and remove existing containers (if any)
-            docker-compose down || true
+            docker-compose down
 
             # Build and start the updated containers
             docker-compose up -d --build
