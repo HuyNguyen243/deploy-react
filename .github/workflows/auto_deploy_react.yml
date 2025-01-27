@@ -16,28 +16,7 @@ jobs:
       # Step 1: Checkout repository
       - name: Checkout code
         uses: actions/checkout@v4
-      # Step 2: SSH into the EC2 instance and prepare the directory
-      - name: Prepare deployment on EC2
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.EC2_IP }}
-          username: ${{ secrets.USER_NAME }}
-          key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
-          script: |
-            # Ensure the app directory exists
-            mkdir -p /var/deploy-react
 
-            # Remove old app files
-            rm -rf /var/deploy-react/*
-      # Step 3: Upload the app code to the EC2 instance
-      - name: Upload code to EC2
-        uses: appleboy/scp-action@v0.0.4
-        with:
-          host: ${{ secrets.EC2_IP }}
-          username: ${{ secrets.USER_NAME }}
-          key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
-          source: .
-          target: /var/deploy-react
       # Step 4: Build and deploy the app on EC2 using Docker Compose
       - name: Build and deploy on EC2
         uses: appleboy/ssh-action@master
